@@ -1,6 +1,8 @@
 # IDE settings
 .idea
 
+# logs
+*.log
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
