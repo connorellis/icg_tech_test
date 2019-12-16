@@ -22,11 +22,9 @@ class Importer:
         if not os.path.exists(path):
             raise FileExistsError(f'{path} doesn\'t exist!')
 
-
     def import_csv(self, path):
         """         
         :param path: path to file
-        :param spark: the spark session
         :return: pandas dataframe
         
         reads the csv into a pandas dataframe and returns it
@@ -39,12 +37,10 @@ class Importer:
 
         return df
 
-
     def import_xlsx(self, path, sheet_name, column_range, header=0):
         """
         :param path: path to file
-        :param spark: the spark session
-        :return: 
+        :return:
         
         reads the file with pandas, then converts to spark dataframe
         

@@ -19,16 +19,6 @@ class Validator:
         Utils.get_logger()
 
     @staticmethod
-    def validate_schema(df, schema):
-
-        print(df)
-        print(schema)
-
-        total_rows['ColumnID'] = total_rows['ColumnID'].astype(str)
-
-        #todo check columns
-
-    @staticmethod
     def validate_column_names(df, schema):
         df_cols = df.columns.tolist()
         schema_cols = list(schema.keys())
@@ -39,14 +29,22 @@ class Validator:
             missing_cols = ', '.join(list(set(schema_cols) - set(df_cols)))
             raise AssertionError(f'Columns in schema missing from data: {missing_cols}')
 
-    @staticmethod
-    def validate_data_types(dt1, dt2):
-        pass
+    def validate_data_types(self, df, schema):
+        for field in schema:
+            self.validate_data_type(df, field, schema[field])
 
     @staticmethod
-    def data_type(dt1, dt2):
-        """ checks if data type 1 is a """
-
+    def validate_data_type(df, column_name, datatype):
+        """
+            attempt to cast the column as the schema data type
+        """
+        for index, row in df.iterrows():
+            value = row[column_name]
+            try:
+                # attempt data conversion to schema data type
+                datatype(row[column_name])
+            except ValueError as e:
+                raise ValueError(f'Error in row {index + 1}, value {value}')
 
     @staticmethod
     def validate_val_in_list(input_df, column_name, reference_list):
@@ -56,9 +54,7 @@ class Validator:
         # ~ is negation
         invalid_rows = input_df[~input_df[column_name].isin(reference_list)]
 
-        print(invalid_rows)
-
-        if int(invalid_rows.count()) > 0:
+        if int(invalid_rows.shape[0]) > 0:
 
             error_index_list = [str(x) for x in invalid_rows.index.tolist()]
             error_row_numbers = ', '.join(error_index_list)
@@ -68,3 +64,14 @@ class Validator:
 
             logging.error(f'Errors in the following rows {error_row_numbers} ')
             raise ValueError(f'The following values don\'t match the reference list: {error_values}')
+
+
+    def cast_dataframe(self, df, schema):
+
+        # first validate the data types are correct
+        self.validate_data_types(df, schema)
+
+        for column in df.columns:
+            df[column] = df[column].astype(schema[column])
+
+        return df

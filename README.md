@@ -4,7 +4,6 @@
 
 You will need to have python3.x installed, and the following modules:
 * [venv](https://docs.python.org/3/library/venv.html) is used to create virtual environments
-* [pybuilder](https://pybuilder.github.io/) is a build tool for Python
 
 To activate the virtual environment and install the dependencies, run the following commands 
 ```bash
@@ -22,9 +21,18 @@ pip3 install -r requirements.txt
 ```
 
 ## Execution
-Todo
-```bash
 
+```bash
+# cd path/to/project/root
+
+# run unit tests
+python3 -m unittest  discover -v -s src/tests
+
+# test csv processing
+python3 -m src.main.processor -d test_data/csv/csv_sample_data.csv -f csv -l test_data/csv/lookups -o output
+
+# test xlsx processing
+python3 -m src.main.processor -d test_data/xslx/excel_sample_data.xlsx -f xlsx -o output
 ```
 
 ## Data Sources
@@ -36,3 +44,6 @@ Todo
     * Tidied up in Excel
 * test_data/lookups/companies.csv is manually created test data of some real companies with grave accents
 
+## Notes
+
+Apologies, I ran out of time to include testing for the processing module
